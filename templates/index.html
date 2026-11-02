@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Cyber Security  | Attacker vs Defender</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <aside class="sidebar">
+    <div class="brand"><span class="brand-mark">C-S LAB</span><div><strong>CYBER SECURITY</strong><small>CYBER GAME THEORY</small></div></div>
+    <div class="nav-label">WORKSPACE</div>
+    <a class="nav-item active" href="#dashboard">▦ &nbsp; Dashboard</a>
+    <a class="nav-item" href="#matrix-section">▤ &nbsp; Payoff Matrix</a>
+    <a class="nav-item" href="#results-section">◉ &nbsp; Equilibrium</a>
+    <a class="nav-item" href="#simulation-section">⌁ &nbsp; Simulation</a>
+    <div class="sidebar-bottom"><span class="status-dot"></span></div>
+  </aside>
+
+  <main class="main" id="dashboard">
+    <header class="topbar">
+      <div><p class="eyebrow">CYBERSECURITY LAB / GAME THEORY</p><h1>Attacker vs. Defender</h1><p class="subheading">Model strategic decisions, explore payoffs, and simulate outcomes.</p></div>
+      <div class="top-pill"><span class="status-dot"></span></div>
+    </header>
+
+    <section class="intro-card">
+      <div><div class="tag">ZERO-SUM GAME MODEL</div><h2>Think strategically. Defend intelligently.</h2><p>The attacker tries to maximize payoff. The defender chooses a strategy to reduce the attacker's expected payoff.</p></div>
+      <div class="shield-art"><div class="shield">◆</div><span>STRATEGY ENGINE</span></div>
+    </section>
+
+    <section class="stat-grid">
+      <article class="stat-card"><span class="stat-icon violet">◎</span><p>Simulation rounds</p><h3 id="rounds-stat">10,000</h3><small>Monte Carlo trials</small></article>
+      <article class="stat-card"><span class="stat-icon blue">↗</span><p>Expected attacker payoff</p><h3 id="expected-stat">—</h3><small>Calculated from the matrix</small></article>
+      <article class="stat-card"><span class="stat-icon green">◈</span><p>Attacker strategy 1</p><h3 id="attacker-stat">—</h3><small>Attack server probability</small></article>
+      <article class="stat-card"><span class="stat-icon orange">⬡</span><p>Defender strategy 1</p><h3 id="defender-stat">—</h3><small>Protect server probability</small></article>
+    </section>
+
+    <section class="content-grid">
+      <article class="panel" id="matrix-section">
+        <div class="panel-heading"><div><p class="eyebrow">MODEL INPUT</p><h2>Payoff matrix</h2></div><span class="mini-badge">2 × 2</span></div>
+        <p class="muted">Edit the attacker's payoff for each strategy combination. Positive values favor the attacker; negative values mean a loss for the attacker.</p>
+        <div class="matrix-wrap">
+          <table class="payoff-table">
+            <thead><tr><th>Attacker ↓ / Defender →</th><th>Protect server</th><th>Protect database</th></tr></thead>
+            <tbody>
+              <tr><th>Attack server</th><td><input id="a" type="number" step="any" value="-2" aria-label="Attack server, protect server payoff"></td><td><input id="b" type="number" step="any" value="5" aria-label="Attack server, protect database payoff"></td></tr>
+              <tr><th>Attack database</th><td><input id="c" type="number" step="any" value="4" aria-label="Attack database, protect server payoff"></td><td><input id="d" type="number" step="any" value="-1" aria-label="Attack database, protect database payoff"></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="controls">
+          <label>Simulation rounds<select id="rounds"><option value="1000">1,000</option><option value="10000" selected>10,000</option><option value="50000">50,000</option><option value="100000">100,000</option></select></label>
+          <label>Random seed<input id="seed" type="number" value="42" min="0"></label>
+        </div>
+        <div class="button-row"><button id="run-btn" class="primary-btn">▶ &nbsp; Run simulation</button><button id="reset-btn" class="secondary-btn">Reset defaults</button></div>
+        <p id="message" class="message" role="status">Ready. Run the simulation to calculate results.</p>
+      </article>
+
+      <article class="panel" id="results-section">
+        <div class="panel-heading"><div><p class="eyebrow">OPTIMAL STRATEGIES</p><h2>Equilibrium analysis</h2></div><span class="mini-badge green-badge">LIVE RESULTS</span></div>
+        <div class="result-row"><div><span class="result-label">Attacker · Attack server</span><div class="progress"><span id="attacker-bar" style="width:0%"></span></div></div><strong id="attacker-prob">—</strong></div>
+        <div class="result-row"><div><span class="result-label">Attacker · Attack database</span><div class="progress"><span id="attacker2-bar" style="width:0%"></span></div></div><strong id="attacker2-prob">—</strong></div>
+        <div class="result-row"><div><span class="result-label">Defender · Protect server</span><div class="progress defender"><span id="defender-bar" style="width:0%"></span></div></div><strong id="defender-prob">—</strong></div>
+        <div class="result-row"><div><span class="result-label">Defender · Protect database</span><div class="progress defender"><span id="defender2-bar" style="width:0%"></span></div></div><strong id="defender2-prob">—</strong></div>
+        <div class="value-box"><span>Expected game value</span><strong id="game-value">—</strong></div>
+        <p id="equilibrium-note" class="muted note">Probabilities will appear here after calculation.</p>
+      </article>
+    </section>
+
+    <section class="chart-grid" id="simulation-section">
+      <article class="panel chart-panel"><div class="panel-heading"><div><p class="eyebrow">SIMULATION OUTPUT</p><h2>Outcome distribution</h2></div></div><canvas id="outcomeChart"></canvas></article>
+      <article class="panel chart-panel"><div class="panel-heading"><div><p class="eyebrow">CONVERGENCE</p><h2>Average payoff by round</h2></div></div><canvas id="payoffChart"></canvas></article>
+    </section>
+
+    <section class="panel methodology">
+      <div class="panel-heading"><div><p class="eyebrow">PROJECT OVERVIEW</p><h2>How the model works</h2></div></div>
+      <div class="steps">
+        <div><span>01</span><h3>Define strategies</h3><p>Choose two attacker actions and two defender actions.</p></div>
+        <div><span>02</span><h3>Set payoffs</h3><p>Fill the matrix with the attacker's payoff for each outcome.</p></div>
+        <div><span>03</span><h3>Calculate equilibrium</h3><p>Find mixed-strategy probabilities for the 2 × 2 zero-sum game.</p></div>
+        <div><span>04</span><h3>Run simulation</h3><p>Sample strategies repeatedly and compare the average payoff with the theoretical value.</p></div>
+      </div>
+    </section>
+    <footer>Game Theory for Cybersecurity · Educational project · Flask + HTML + CSS + JavaScript</footer>
+  </main>
+  <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>
